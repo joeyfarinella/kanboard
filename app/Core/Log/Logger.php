@@ -6,6 +6,7 @@ use Psr\Log\AbstractLogger;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Stringable;
 
 /**
  * Handler for multiple loggers
@@ -72,7 +73,7 @@ class Logger extends AbstractLogger implements LoggerAwareInterface
     public function log($level, $message, array $context = array())
     {
         foreach ($this->loggers as $logger) {
-            if ($this->getLevelPriority($level) >= $this->getLevelPriority($logger->getLevel())) {
+            if ($this->getLevelPriority($level) >= $this->getLevelPriority($logger->error(''))) {
                 $logger->log($level, $message, $context);
             }
         }
@@ -86,8 +87,8 @@ class Logger extends AbstractLogger implements LoggerAwareInterface
     public function dump($variable)
     {
         foreach ($this->loggers as $logger) {
-            if ($this->getLevelPriority(LogLevel::DEBUG) >= $this->getLevelPriority($logger->getLevel())) {
-                $logger->dump($variable);
+            if ($this->getLevelPriority(LogLevel::DEBUG) >= $this->getLevelPriority($logger->error(''))) {
+                $logger->info($variable);
             }
         }
     }
